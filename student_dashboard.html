@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: yellow;
+            color: black;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: yellow;
+            color: black;
+            height: 70px; /* Set a fixed height for the header */
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .profile-section, .home-section, .notifications-section, .settings-section {
+            margin-bottom: 20px;
+        }
+        /* Additional styling */
+        .navigation-menu {
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .navigation-menu li {
+            margin-right: 10px;
+        }
+        .navigation-menu li button {
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .navigation-menu li button:hover {
+            background-color: darkblue;
+        }
+        .list-group-item {
+            border: 1px solid black;
+            padding: 10px;
+            margin-bottom: 5px;
+        }
+        .logo {
+            display: flex;
+            align-items: center; /* Vertically center the logo */
+            justify-content: flex-start; /* Align the logo to the left */
+        }
+        .logo img {
+            max-height: 90px; /* Adjust the height of the logo image */
+        }
+        .thick-text {
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <img src="logo.jpg" alt="School Logo"> <!-- Insert your logo file here -->
+                <span class="thick-text">STI WVMS</span>
+            </div>
+            <nav class="navigation">
+                <ul class="navigation-menu">
+                    <li><button onclick="showSection('profile')">Profile</button></li>
+                    <li><button onclick="showSection('home')">Home</button></li>
+                    <li><button onclick="showSection('notifications')">Notifications</button></li>
+                    <li><button onclick="showSection('settings')">Settings</button></li>
+                    <li><button onclick="logout()">Logout</button></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="main-content">
+            <section id="profile" class="profile-section" style="display: none;">
+                <h2>Profile Section</h2>
+                <button>Edit Profile</button>
+            </section>
+            <section id="home" class="home-section">
+                <h2>Home Section</h2>
+                <h2 class="card-title text-danger">Recent Violations</h2>
+                <ul id="recentViolationsList" class="list-group">
+                    <!-- Recent violations will be dynamically populated here -->
+                </ul>
+                <div class="card-footer bg-light">
+                    <small class="text-muted">Last updated <span id="lastUpdatedTime"></span></small>
+                </div>
+            </section>
+            <section id="notifications" class="notifications-section" style="display: none;">
+                <h2>Notifications Section</h2>
+                <ul>
+                    <!-- Notifications can be dynamically populated here if needed -->
+                </ul>
+            </section>
+            <section id="settings" class="settings-section" style="display: none;">
+                <h2>Settings Section</h2>
+                <ul>
+                    <li><button>Change Password</button></li>
+                    <li><button>Notification Preferences</button></li>
+                    <li><button>Privacy Settings</button></li>
+                </ul>
+            </section>
+        </div>
+        <footer class="footer">
+            Copyright Information<br>
+            School Contact Information
+        </footer>
+    </div>
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.main-content section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        function logout() {
+            // Redirect to login.html
+            window.location.href = 'login.html';
+        }
+
+        function fetchRecentViolations() {
+            $.ajax({
+                url: 'fetch_recent_violations.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    updateRecentViolations(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching recent violations:', error);
+                }
+            });
+        }
+
+        function updateRecentViolations(violations) {
+            $('#recentViolationsList').empty();
+            $('#lastUpdatedTime').text(new Date().toLocaleString());
+
+            violations.forEach(function(violation) {
+                var listItem = '<li class="list-group-item">' +
+                    'Violation ID: ' + violation.id +
+                    '<br>Violation Type: ' + violation.violation_type +
+                    '<br>Description: ' + violation.violation_description +
+                    '<br>Date Reported: ' + violation.date_reported +
+                    '</li>';
+                $('#recentViolationsList').append(listItem);
+            });
+        }
+
+        // Initial fetch
+        fetchRecentViolations();
+
+        // Listen for postMessage events
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'updateRecentViolations') {
+                updateRecentViolations(event.data.violations);
+            }
+        }, false);
+
+        // Initially show the home section
+        showSection('home');
+    </script>
+</body>
+</html>

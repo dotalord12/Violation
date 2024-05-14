@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: lightyellow; /* Set background color to light gray */
+        }
+        .card {
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="text-center">Admin Login</h3>
+        </div>
+        <div class="card-body">
+            <form id="adminLoginForm" onsubmit="loginAdmin(); return false;">
+                <div class="form-group">
+                    <label for="adminUsername">Username</label>
+                    <input type="text" class="form-control" id="adminUsername" placeholder="Enter Username">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" class="form-control" id="adminPassword" placeholder="Enter Password">
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-muted text-center">
+            <p>Login as student? <a href="Login.html">Click here</a></p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        function loginAdmin() {
+            // Retrieve admin username and password
+            var adminUsername = document.getElementById('adminUsername').value;
+            var adminPassword = document.getElementById('adminPassword').value;
+
+            // Your admin login logic here
+            // For demonstration purposes, let's assume simple validation
+            if (adminUsername === 'admin' && adminPassword === 'admin123') {
+                // Redirect to admin dashboard
+                window.location.href = 'Title UI.html';
+            } else {
+                // Display error message or handle invalid credentials
+                alert('Invalid admin credentials. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

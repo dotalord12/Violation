@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #666;
+            color: #fff;
+        }
+        .sidebar {
+            flex: 0 0 200px;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .profile-section, .home-section, .notifications-section, .settings-section {
+            margin-bottom: 20px;
+        }
+        /* Additional styling */
+        .navigation-menu {
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+        }
+        .navigation-menu li {
+            margin-right: 10px;
+        }
+        .navigation-menu li button {
+            background-color: #444;
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .navigation-menu li button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">Logo / School Name</div>
+            <nav class="navigation">
+                <ul class="navigation-menu">
+                    <li><button>Profile</button></li>
+                    <li><button>Home</button></li>
+                    <li><button>Notifications</button></li>
+                    <li><button>Settings</button></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="sidebar">
+            <div class="profile-picture">Profile Picture</div>
+            <ul class="quick-links">
+                <li><button>Profile</button></li>
+                <li><button>Home</button></li>
+                <li><button>Notifications</button></li>
+                <li><button>Settings</button></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <section id="profile" class="profile-section">
+                <h2>Profile Section</h2>
+                <p>Student Name: John Doe</p>
+                <p>Student ID: 123456</p>
+                <p>Class/Section: Grade 10 Section A</p>
+                <p>Contact Information:</p>
+                <p>Email: john.doe@example.com</p>
+                <p>Phone: +1234567890</p>
+                <button>Edit Profile</button>
+            </section>
+            <section id="home" class="home-section">
+                <h2>Home Section</h2>
+                <p>Summary of Recent Violations</p>
+                <p>Quick Links to Important Sections</p>
+            </section>
+            <section id="notifications" class="notifications-section">
+                <h2>Notifications Section</h2>
+                <ul>
+                    <li>Notification 1</li>
+                    <li>Notification 2</li>
+                    <li>Notification 3</li>
+                </ul>
+            </section>
+            <section id="settings" class="settings-section">
+                <h2>Settings Section</h2>
+                <ul>
+                    <li><button>Change Password</button></li>
+                    <li><button>Notification Preferences</button></li>
+                    <li><button>Privacy Settings</button></li>
+                    <li><button>Logout</button></li>
+                </ul>
+            </section>
+        </div>
+        <footer class="footer">
+            Copyright Information<br>
+            School Contact Information
+        </footer>
+    </div>
+</body>
+</html>

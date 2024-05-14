@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Violations</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 50px;
+        }
+        .card {
+            border: 1px solid #dee2e6;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .action-buttons {
+            display: flex;
+            align-items: center;
+        }
+        .action-buttons button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Violations</h1>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Reported Violations</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Violation ID</th>
+                                <th>Student Name</th>
+                                <th>Violation Type</th>
+                                <th>Description</th>
+                                <th>Date Reported</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="violationTableBody">
+                            <!-- Rows for reported violations will be dynamically populated here -->
+                            <tr>
+                                <td class="action-buttons">
+                                    <button type="button" class="btn btn-success approveBtn">Approve</button>
+                                    <button type="button" class="btn btn-danger rejectBtn">Reject</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="manageviolation.php" class="btn btn-primary">Go to Violation Records</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Add event listeners for approve and reject buttons
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('approveBtn')) {
+                // Get the parent row of the button
+                var row = event.target.closest('tr');
+                // Get the violation ID from the first cell of the row
+                var violationId = row.cells[0].innerText;
+                // Perform action to approve the violation (you can implement this part)
+                console.log("Violation approved: " + violationId);
+            } else if (event.target.classList.contains('rejectBtn')) {
+                // Get the parent row of the button
+                var row = event.target.closest('tr');
+                // Get the violation ID from the first cell of the row
+                var violationId = row.cells[0].innerText;
+                // Perform action to reject the violation (you can implement this part)
+                console.log("Violation rejected: " + violationId);
+            }
+        });
+    </script>
+</body>
+</html>
