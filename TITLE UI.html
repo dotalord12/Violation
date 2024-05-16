@@ -10,10 +10,24 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
+    <style>
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+    }
+    #reportViolationForm {
+    width: 100%; /* Adjust the width of the form container as needed */
+    max-width: 600px; /* Set a maximum width to prevent the form from becoming too wide on larger screens */
+}
+</style>
+    
 </head>
 <body style="background-color:white;">
     <div class="container">
-        <h1>STI COLLEGE ALABANG VMS</h1>
+        <h1>STI WVMS</h1>
         <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand text-light" href="#">Home</a>
@@ -35,24 +49,21 @@
                     </li>
                 </ul>
             </div>
-            </nav>
-               
-
+        </nav>
+        
         <!-- Main Content Area -->
-        <div class="row mt-4">
-            <div class="col-md-12">
+            <div class="container d-flex justify-content-center align-items-center" style="height: 70vh;">
                 <div id="reportViolationForm">
-                    <h2>Report Violation</h2>
-                    <form action="manageviolation.php" method="POST"></form>
+                    <h2 class="text-center">Report Violation</h2>
                     <form id="violationForm">
                         <div class="form-group">
                             <label for="studentName">Student Name</label>
-                            <input type="text" class="form-control" id="studentName" placeholder="Enter student name">
+                            <input type="text" class="form-control" id="studentName" placeholder="Enter student name" required>
                         </div>
                         <div class="form-group">
                             <label for="course">Course</label>
-                            <select class="form-control" id="course">
-                                <option value=>Course</option>
+                            <select class="form-control" id="course" required>
+                                <option value="">Course</option>
                                 <option value="Bachelors of Science in Information Technology">Bachelors of Science in Information Technology</option>
                                 <option value="Bachelors of Science in Hospital Management">Bachelors of Science in Hospital Management</option>
                                 <option value="Bachelors of Science in Tourism">Bachelors of Science in Tourism</option>
@@ -61,8 +72,8 @@
                         </div> 
                         <div class="form-group">
                             <label for="violationType">Violation Type</label>
-                            <select class="form-control" id="violationType">
-                                <option value=>Select violation type</option>
+                            <select class="form-control" id="violationType" required>
+                                <option value="">Select violation type</option>
                                 <option value="Academic misconduct">Academic misconduct</option>
                                 <option value="Behavioral misconduct">Behavioral misconduct</option>
                                 <option value="Other">Other</option>
@@ -70,17 +81,9 @@
                         </div>
                         <div class="form-group">
                             <label for="violationDescription">Violation Description</label>
-                            <textarea class="form-control" id="violationDescription" rows="3" placeholder="Enter violation description"></textarea>
+                            <textarea class="form-control" id="violationDescription" rows="3" placeholder="Enter violation description" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary" onclick="redirectToManageViolations()">Submit</button>
-                        <script>
-                            function redirectToManageViolations() {
-                                // Perform any form validation if needed
-                                
-                                // Redirect to the "Manage Violations" page
-                                window.location.href = "manageviolation.php";
-                            }
-                        </script>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
                 
@@ -110,6 +113,8 @@
                             if (xhr.status === 200) {
                                 // Handle successful response from server
                                 console.log(xhr.responseText);
+                                // Redirect to the "Manage Violations" page
+                                window.location.href = "manageviolation.php";
                             } else {
                                 // Handle error
                                 console.error('Error:', xhr.statusText);
@@ -121,13 +126,15 @@
                         };
                         xhr.send(formData);
                     });
+                
+                    function logout() {
+                        // Perform logout action here
+                        // For demonstration, let's redirect to login.html
+                        window.location.href = "Login.html";
+                    }
                 </script>
-                <script>
-                function logout() {
-                    // Perform logout action here
-                    // For demonstration, let's redirect to login.html
-                    window.location.href = "Login.html";
-                }
-            </script>
-                </body> 
-                </html>
+            </div>
+        </div>
+    </div>
+</body> 
+</html>

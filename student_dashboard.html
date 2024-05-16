@@ -147,7 +147,7 @@
 
         function fetchRecentViolations() {
             $.ajax({
-                url: 'fetch_recent_violations.php',
+                url: 'fetch_recent_violations.php', // Ensure this points to your PHP script
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {

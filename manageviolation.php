@@ -1,6 +1,6 @@
 <?php
-// Check if form data is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Handle form submission to add a new violation//
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['violationId'])) {
     // Extract form data
     $studentName = $_POST['studentName'];
     $course = $_POST['course'];
@@ -8,17 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $violationDescription = $_POST['violationDescription'];
     $dateReported = $_POST['dateReported'];
 
-    // Insert form data into the database
     try {
-        // Connect to the database (replace dbname, username, password with your actual database credentials)
         $pdo = new PDO('mysql:host=localhost;dbname=violation', 'root', '');
-        
-        // Set PDO error mode to exception
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        // Prepare SQL statement to insert data
-        $sql = "INSERT INTO violations (student_name, course, violation_type, violation_description, date_reported) 
-                VALUES (:studentName, :course, :violationType, :violationDescription, :dateReported)";
+
+        $sql = "INSERT INTO violations (student_name, course, violation_type, violation_description, date_reported, status) 
+                VALUES (:studentName, :course, :violationType, :violationDescription, :dateReported, 'Pending')";
         $stmt = $pdo->prepare($sql);
         
         // Bind parameters
@@ -41,6 +36,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo 'Error: ' . $e->getMessage();
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['violationId']) && isset($_POST['status'])) {
+    $violationId = $_POST['violationId'];
+    $status = $_POST['status'];
+
+    try {
+        // Connect to the database
+        $pdo = new PDO('mysql:host=localhost;dbname=violation', 'root', '');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Prepare SQL statement to update status
+        $sql = "UPDATE violations SET status = :status WHERE id = :violationId";
+        $stmt = $pdo->prepare($sql);
+
+        // Bind parameters
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':violationId', $violationId);
+
+        // Execute the prepared statement
+        $stmt->execute();
+
+        // Close connection
+        $pdo = null;
+
+        // Return success message
+        echo json_encode(['status' => 'success', 'message' => 'Violation status updated successfully']);
+    } catch (PDOException $e) {
+        // Handle database error
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -79,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <th>Violation Type</th>
                                 <th>Description</th>
                                 <th>Date Reported</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -97,11 +126,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 die("Connection failed: " . $conn->connect_error);
                             }
 
-                            $sql = "SELECT id, student_name, course, violation_type, violation_description, date_reported FROM violations";
+                            $sql = "SELECT id, student_name, course, violation_type, violation_description, date_reported, status FROM violations";
                             $result = $conn->query($sql);
 
                             if ($result->num_rows > 0) {
                                 while($row = $result->fetch_assoc()) {
+                                    $status = $row['status'] ? $row['status'] : 'Pending';
                                     echo "<tr>
                                           <td>{$row['id']}</td>
                                           <td>{$row['student_name']}</td>
@@ -109,80 +139,134 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                           <td>{$row['violation_type']}</td>
                                           <td>{$row['violation_description']}</td>
                                           <td>{$row['date_reported']}</td>
+                                          <td>{$status}</td>
                                           <td class='action-buttons'>
-                                              <button type='button' class='btn btn-success approveBtn'>Approve</button>
-                                              <button type='button' class='btn btn-danger rejectBtn'>Reject</button>
+                                              <button type='button' class='btn btn-success approveBtn' data-id='{$row['id']}'>Approve</button>
+                                              <button type='button' class='btn btn-danger rejectBtn' data-id='{$row['id']}'>Reject</button>
                                           </td>
                                           </tr>";
                                 }
-                            
-                        } else {
-                            echo "<tr><td colspan='7'>No violations found</td></tr>";
-                        }
-                        $conn->close();
-                        ?>
-                    </tbody>
-                </table>
+                            } else {
+                                echo "<tr><td colspan='8'>No violations found</td></tr>";
+                            }
+                            $conn->close();
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+        <div class="mt-4">
+            <a href="Title UI.html" class="btn btn-primary">Report a New Violation</a>
+        </div>
     </div>
-    <div class="mt-4">
-        <a href="Title UI.html" class="btn btn-primary">Report a New Violation</a>
-    </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Add Font Awesome library -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Add Font Awesome library -->
 
-<script>
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('approveBtn') || event.target.classList.contains('rejectBtn')) {
-            var btn = event.target;
-            // Disable the button to prevent multiple clicks
-            btn.disabled = true;
-
-            // Change button style to green for Approve and red for Reject
-            if (btn.classList.contains('approveBtn')) {
-                btn.classList.remove('btn-primary');
-                btn.classList.add('btn-success');
-            } else {
-                btn.classList.remove('btn-danger');
-                btn.classList.add('btn-secondary');
-            }
-
-            // Change button text to edit icon
-            btn.innerHTML = '<i class="fas fa-edit"></i>';
-
-            var row = event.target.closest('tr');
-            var violationId = row.cells[0].innerText;
-            var status = btn.classList.contains('approveBtn') ? 'approved' : 'rejected';
-
-            // AJAX request to update the violation status
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'updateviolationstatus.php', true);
-            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.status === 'success') {
-                        console.log("Violation " + status + ": " + violationId);
-                        // Redirect to the student dashboard
-                        window.location.href = "Recent_violation.html";
-                    } else {
-                        console.error('Error:', response.message);
-                    }
-                } else {
-                    console.error('Error:', xhr.statusText);
-                }
-            };
-            xhr.onerror = function() {
-                console.error('Connection Error');
-            };
-            xhr.send('violationId=' + encodeURIComponent(violationId) + '&status=' + status);
+    <script> 
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch violation status after the page loads
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'fetch_recent_violations.php', true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var violations = JSON.parse(xhr.responseText);
+            updateViolationStatus(violations);
+        } else {
+            console.error('Error:', xhr.statusText);
         }
-    });
-</script>
+    };
+    xhr.onerror = function() {
+        console.error('Connection Error');
+    };
+    xhr.send();
+
+    function updateViolationStatus(violations) {
+        var rows = document.querySelectorAll('#violationTableBody tr');
+        violations.forEach(function(violation) {
+            var row = Array.from(rows).find(row => row.querySelector('td:first-child').textContent.trim() === violation.id);
+            if (row) {
+                var statusCell = row.querySelector('td:nth-child(7)');
+                statusCell.textContent = violation.status;
+                var actionBtn = row.querySelector('.action-buttons');
+                if (violation.status === 'Approved') {
+                    actionBtn.innerHTML = '<i class="fas fa-check text-success"></i>';
+                } else if (violation.status === 'Rejected') {
+                    actionBtn.innerHTML = '<i class="fas fa-times text-danger"></i>';
+                }
+                // Check if an action has been taken for this violation
+                var storedAction = localStorage.getItem('violation_' + violation.id);
+                if (storedAction === 'Approved' || storedAction === 'Rejected') {
+                    // Hide the buttons and display appropriate icon
+                    row.querySelector('.approveBtn').style.display = 'none';
+                    row.querySelector('.rejectBtn').style.display = 'none';
+                    if (storedAction === 'Approved') {
+                        actionBtn.innerHTML = '<i class="fas fa-check text-success"></i>';
+                    } else {
+                        actionBtn.innerHTML = '<i class="fas fa-times text-danger"></i>';
+                    }
+                }
+            }
+        });
+    }
+});
+
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('approveBtn') || event.target.classList.contains('rejectBtn')) {
+        var btn = event.target;
+        var row = btn.closest('tr');
+        var violationId = btn.getAttribute('data-id');
+        var status = btn.classList.contains('approveBtn') ? 'Approved' : 'Rejected';
+
+        // Check if an action has already been taken for this violation
+        var storedAction = localStorage.getItem('violation_' + violationId);
+        if (storedAction === 'Approved' || storedAction === 'Rejected') {
+            // Action already taken, do nothing
+            return;
+        }
+
+        // Store the action in localStorage
+        localStorage.setItem('violation_' + violationId, status);
+
+        // Disable the buttons and display appropriate icon
+        btn.style.display = 'none';
+        var actionBtn = row.querySelector('.action-buttons');
+        if (status === 'Approved') {
+            actionBtn.innerHTML = '<i class="fas fa-check text-success"></i>';
+        } else {
+            actionBtn.innerHTML = '<i class="fas fa-times text-danger"></i>';
+        }
+
+        // AJAX request to update the violation status
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'manageviolation.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === 'success') {
+                    console.log(response.message);
+                    // Update status
+                    var statusCell = row.querySelector('td:nth-child(7)');
+                    statusCell.textContent = status;
+                } else {
+                    console.error('Error:', response.message);
+                }
+            } else {
+                console.error('Error:', xhr.statusText);
+            }
+        };
+        xhr.onerror = function() {
+            console.error('Connection Error');
+        };
+        xhr.send('violationId=' + encodeURIComponent(violationId) + '&status=' + encodeURIComponent(status));
+    }
+});
+
+
+</script>  
 
 </body>
 </html>
