@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['violationId']) && iss
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body { background-color: white; }
-        .container { max-width: 800px; margin: 0 auto; padding-top: 50px; }
+        .container-fluid { max-width: 100%; padding-top: 50px; }
         .card { border: 1px solid #dee2e6; }
         .card-header { background-color: #007bff; color: #fff; }
         .table-responsive { margin-top: 20px; }
@@ -89,9 +89,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['violationId']) && iss
         .action-buttons button { margin-right: 10px; }
     </style>
 </head>
+<body style="background-color:white;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand text-light" href="Admin_Dashboard.html">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+            <li class="nav-item">
+                        <a class="nav-link text-light" href="TITLE UI.html">Report Violation</a>
+                    </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="manageviolation.php">Manage Violations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="Settings.html">Settings</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button class="btn btn-danger" onclick="logout()">Logout</button>
+                    <script> 
+                    function logout() {
+                        // Perform logout action here
+                        // For demonstration, let's redirect to login.html
+                        window.location.href = "Login.html";
+                    }
+                    </script> 
+                </li>
+            </ul>
+        </div>
+    </nav>
+</head>
 <body>
     <div class="container">
-        <h1>Manage Violations</h1>
+        <h1></h1>
+        <div class="row justify-content-center mt-5"> <!-- Added mt-5 for top margin -->
+        <div class="col-lg-8"></div>
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0">Reported Violations</h5>

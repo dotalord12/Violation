@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
+    <title>Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"> 
     <style>
         /* Basic styling */
@@ -11,17 +11,22 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f8f9fa;
         }
         .container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            padding: 20px;
         }
         .main-content {
             flex: 1;
             padding: 20px;
         }
-        /* Additional styling */
+        /* Header styling */
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
         .list-group-item {
             border: 1px solid black;
             padding: 10px;
@@ -29,6 +34,35 @@
         }
         .thick-text {
             font-weight: bold;
+        }
+        /* Section styling */
+        .section {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .section-title {
+            margin-top: 0;
+            color: #007bff;
+        }
+        /* Recent violations styling */
+        .recent-violations {
+            padding: 20px;
+            background-color: #f8d7da;
+            border-radius: 10px;
+            margin-top: 20px;   
+        }
+        .violation-item {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .violation-item h4 {
+            margin-bottom: 5px;
+            color: #dc3545;
         }
         .navbar .search-form {
             flex-grow: 1; /* Allow the search form to grow and occupy available space */
@@ -79,61 +113,57 @@
             </div>
         </div>
     </nav>
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <!-- Summary Information -->
+        <div class="section">
+            <h2 class="section-title">Summary Information</h2>
+            <p>Summary information content goes here...</p>
+        </div>
 
+        <!-- Recent Violations -->
+        <div class="section">
+            <h2 class="section-title">Recent Violations</h2>
+            <div class="recent-violations" id="recentViolationsList">
+                <!-- Recent violations will be dynamically populated here -->
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="section">
+            <h2 class="section-title">Statistics</h2>
+            <p>Statistics content goes here...</p>
+        </div>
+
+        <!-- Announcements -->
+        <div class="section">
+            <h2 class="section-title">Announcements</h2>
+            <p>Announcements content goes here...</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-        function showSection(sectionId) {
-            document.querySelectorAll('.main-content section').forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-        }
-
-        function logout() {
-            // Redirect to login.html
-            window.location.href = 'login.html';
-        }
-
-        function fetchRecentViolations() {
+        $(document).ready(function() {
+            // Fetch recent violations from "Recent Violation.html"
             $.ajax({
-                url: 'fetch_recent_violations.php', // Ensure this points to your PHP script
+                url: 'Recent Violation.html',
                 type: 'GET',
-                dataType: 'json',
+                dataType: 'html',
                 success: function(data) {
-                    updateRecentViolations(data);
+                    // Find the recent violations list in the fetched data
+                    var recentViolationsList = $(data).find('#recentViolationsList').html();
+                    // Populate the recent violations list into the dashboard
+                    $('#recentViolationsList').html(recentViolationsList);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching recent violations:', error);
                 }
             });
-        }
-
-        function updateRecentViolations(violations) {
-            $('#recentViolationsList').empty();
-            $('#lastUpdatedTime').text(new Date().toLocaleString());
-
-            violations.forEach(function(violation) {
-                var listItem = '<li class="list-group-item">' +
-                    'Violation ID: ' + violation.id +
-                    '<br>Violation Type: ' + violation.violation_type +
-                    '<br>Description: ' + violation.violation_description +
-                    '<br>Date Reported: ' + violation.date_reported +
-                    '</li>';
-                $('#recentViolationsList').append(listItem);
-            });
-        }
-
-        // Initial fetch
-        fetchRecentViolations();
-
-        // Listen for postMessage events
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'updateRecentViolations') {
-                updateRecentViolations(event.data.violations);
-            }
-        }, false);
-
-        // Initially show the home section
-        showSection('home');
+        });
     </script>
 </body>
 </html>

@@ -14,22 +14,32 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: lightyellow; /* Set background color to light gray */
+            background-color: rgb(250, 246, 246); /* Set background color to light gray */
         }
         .card {
             width: 400px;
         }
+        .card-header {
+            background-color:#3760de;
+            color:white;
+        }
+        .card-footer{ 
+            background-color:#3760de;
+            color:white;
+        }
+        
+
     </style>
 </head>
 <body>
     <div class="card">
         <div class="card-header">
-            <h3 class="text-center">Student Login</h3>
+            <h3 class="text-center">Login</h3>
         </div>
         <div class="card-body">
             <form id="studentLoginForm" onsubmit="loginStudent(); return false;">
                 <div class="form-group">
-                    <label for="studentId">Student ID</label>
+                    <label for="studentId">Username</label>
                     <input type="text" class="form-control" id="studentId" placeholder="Enter Student ID">
                 </div>
                 <div class="form-group">
@@ -41,8 +51,9 @@
                 </div>
             </form>
         </div>
-        <div class="card-footer text-muted text-center">
-            <p>Login as admin? <a href="admin_login.html">Click here</a></p>
+        <div class="card-footer text-center">
+            <p> </p>
+            <p> </p>
         </div>
     </div>
 
@@ -54,19 +65,34 @@
     <script>
         function loginStudent() {
             // Retrieve student ID and password
-            var studentId = document.getElementById('studentId').value;
-            var studentPassword = document.getElementById('studentPassword').value;
-
-            // Your student login logic here
-            // For demonstration purposes, let's assume simple validation
-            if (studentId === 'student123' && studentPassword === 'password123') {
+            var username = document.getElementById('studentId').value;
+            var password = document.getElementById('studentPassword').value;
+    
+            // Admin credentials
+            var adminUsername = 'admin';
+            var adminPassword = 'admin123';
+    
+            // Student credentials
+            var studentUsername = 'student123';
+            var studentPassword = 'password123';
+    
+            // Check if it's admin login
+            if (username === adminUsername && password === adminPassword) {
+                // Redirect to admin dashboard
+                window.location.href = 'Title UI.html';
+            } 
+            // Check if it's student login
+            else if (username === studentUsername && password === studentPassword) {
                 // Redirect to student dashboard
-                window.location.href = 'student_dashboard.html';
-            } else {
+                window.location.href = 'Home.html';
+            } 
+            // Handle invalid credentials
+            else {
                 // Display error message or handle invalid credentials
-                alert('Invalid student credentials. Please try again.');
+                alert('Invalid credentials. Please try again.');
             }
         }
     </script>
+    
 </body>
 </html>
