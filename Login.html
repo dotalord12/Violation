@@ -4,50 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Login</title>
-    <!-- Bootstrap CSS -->
+    <script src="https://alcdn.msftauth.net/browser/2.17.0/js/msal-browser.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS -->
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgb(250, 246, 246); /* Set background color to light gray */
-        }
-        .card {
-            width: 400px;
-        }
-        .card-header {
-            background-color:#3760de;
-            color:white;
-        }
-        .card-footer{ 
-            background-color:#3760de;
-            color:white;
-        }
-        
-
+        body, html { height: 100%; margin: 0; display: flex; justify-content: center; align-items: center; background-color: rgb(250, 246, 246); }
+        .card { width: 400px; }
+        .card-header { background-color: #3760de; color: white; }
+        .card-footer { background-color: #3760de; color: white; }
+        #adminForm { display: none; }
     </style>
 </head>
 <body>
-    <div class="card">
+    <div class="card" id="studentLoginCard">
         <div class="card-header">
             <h3 class="text-center">Login</h3>
         </div>
+        <div class="card-body text-center">
+            <button type="button" class="btn btn-primary" onclick="loginStudent()">Login with Microsoft 365</button>
+        </div>
+        <div class="card-footer text-center">
+            <p> </p>
+            <p> </p>
+        </div>
+    </div>
+
+    <div class="card" id="adminForm">
+        <div class="card-header">
+            <h3 class="text-center">Admin Login</h3>
+        </div>
         <div class="card-body">
-            <form id="studentLoginForm" onsubmit="loginStudent(); return false;">
+            <form id="adminLoginForm">
                 <div class="form-group">
-                    <label for="studentId">Username</label>
-                    <input type="text" class="form-control" id="studentId" placeholder="Enter Student ID">
+                    <label for="adminUsername">Username</label>
+                    <input type="text" class="form-control" id="adminUsername" placeholder="Enter Admin Username">
                 </div>
                 <div class="form-group">
-                    <label for="studentPassword">Password</label>
-                    <input type="password" class="form-control" id="studentPassword" placeholder="Enter Password">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" class="form-control" id="adminPassword" placeholder="Enter Admin Password">
                 </div>
                 <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-primary" onclick="loginAdmin()">Login</button>
                 </div>
             </form>
         </div>
@@ -57,42 +53,51 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Custom JavaScript -->
     <script>
-        function loginStudent() {
-            // Retrieve student ID and password
-            var username = document.getElementById('studentId').value;
-            var password = document.getElementById('studentPassword').value;
-    
-            // Admin credentials
-            var adminUsername = 'admin';
-            var adminPassword = 'admin123';
-    
-            // Student credentials
-            var studentUsername = 'student123';
-            var studentPassword = 'password123';
-    
-            // Check if it's admin login
-            if (username === adminUsername && password === adminPassword) {
-                // Redirect to admin dashboard
-                window.location.href = 'Title UI.html';
-            } 
-            // Check if it's student login
-            else if (username === studentUsername && password === studentPassword) {
-                // Redirect to student dashboard
-                window.location.href = 'Home.html';
-            } 
-            // Handle invalid credentials
-            else {
-                // Display error message or handle invalid credentials
-                alert('Invalid credentials. Please try again.');
+        const msalConfig = {
+            auth: {
+                clientId: 'd3496934-5f5d-45b2-806e-26f0e298a11c', 
+                authority: 'https://login.microsoftonline.com/69587499-a807-43e6-b603-680dc411b8b1', 
+                redirectUri: 'http://localhost/VMS/Home.html' 
+            }
+        };
+
+        const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+        async function loginStudent() {
+            try {
+                const authResponse = await msalInstance.loginPopup({
+                    scopes: ["User.Read"]
+                });
+                console.log('Authentication successful!', authResponse);
+                window.location.href = 'Home.html'; // Redirect to your application after successful login
+            } catch (error) {
+                console.error('Authentication failed:', error);
+                alert('Authentication failed. Please try again.');
             }
         }
+
+        function loginAdmin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            // Replace with actual admin authentication logic
+            if (username === 'admin' && password === 'admin123') {
+                alert('Admin authentication successful!');
+                window.location.href = 'Admin_Dashboard.html'; // Redirect to admin page
+            } else {
+                alert('Admin authentication failed. Please try again.');
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'a') {
+                event.preventDefault(); // Prevent the default Ctrl+A behavior
+                const studentLoginCard = document.getElementById('studentLoginCard');
+                const adminForm = document.getElementById('adminForm');
+                studentLoginCard.style.display = 'none';
+                adminForm.style.display = 'block';
+            }
+        });
     </script>
-    
 </body>
 </html>

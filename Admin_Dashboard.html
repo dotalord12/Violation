@@ -18,6 +18,8 @@
             margin-right: auto;
             max-width: 100%;
         }
+        
+</style>
     </style>
 </head>
 <body style="background-color:white;">
@@ -32,32 +34,39 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" href="TITLE UI.html">Report Violation</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="manageviolation.php">Manage Violations</a>
+                    <li class="nav-item"> 
+                        <a class="nav-link text-light" href="manageviolation.php">Manage Violation</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="Settings.html">Settings</a>
-                    </li>
-                </ul>
-                <!-- Move the logout button to the right side -->
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <button class="btn btn-danger" onclick="logout()">Logout</button>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Violation List
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="Approve.html">Approve List</a>
+                                <a class="dropdown-item" href="#">Reject List</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="Settings.html">Settings</a>
+                        </li>
+                    </ul>
+                </div> 
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <button class="btn btn-danger" onclick="logout()">Logout</button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-        <!-- Include the Violation Management System content -->
-        <h1>Welcome, Admin</h1>
         <!-- Violation Records -->
         <div class="card">
             <div class="card-header">
                 Violation Records
             </div>
-            <div class="card-body">
-                <!-- Display violation records here -->
-                <p>No violation records found.</p>
+            <div class="card-body" id="violationRecords">
+                <!-- Violation records will be dynamically added here -->
             </div>
         </div>
 
@@ -93,6 +102,50 @@
         function logout() {
             window.location.href = "Login.html";
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // Fetch violation status after the page loads
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'fetch.php', true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var latestViolation = JSON.parse(xhr.responseText);
+            displayLatestViolation(latestViolation);
+        } else {
+            console.error('Error:', xhr.statusText);
+        }
+    };
+    xhr.onerror = function() {
+        console.error('Connection Error');
+    };
+    xhr.send();
+
+    function displayLatestViolation(latestViolation) {
+        const violationContainer = document.querySelector('#violationRecords');
+        if (Object.keys(latestViolation).length > 0) {
+            // If a violation record is found, update the Violation Records section
+            violationContainer.innerHTML = `
+                <p>Latest Violation Record:</p>
+                <ul>
+                    <li>Violation ID: ${latestViolation.id}</li>
+                    <li>Student Name: ${latestViolation.student_name}</li>
+                    <li>Course: ${latestViolation.course}</li>
+                    <li>Violation Type: ${latestViolation.violation_type}</li>
+                    <li>Description: ${latestViolation.violation_description}</li>
+                    <li>Date Reported: ${latestViolation.date_reported}</li>
+                </ul>
+            `;
+        } else {
+            // If no violation records found, display appropriate message
+            violationContainer.innerHTML = '<p>No violation records found.</p>';
+        }
+    }
+});
+</script>
+<script> 
+
+        // Call the function to update Violation Records when the page loads
+        window.addEventListener('load', updateViolationRecords);
     </script>
 </body>
 </html>

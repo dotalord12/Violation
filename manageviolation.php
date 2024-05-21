@@ -91,22 +91,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['violationId']) && iss
 </head>
 <body style="background-color:white;">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand text-light" href="Admin_Dashboard.html">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-            <li class="nav-item">
+    <a class="navbar-brand text-light" href="Admin_Dashboard.html">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
                         <a class="nav-link text-light" href="TITLE UI.html">Report Violation</a>
                     </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="manageviolation.php">Manage Violations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="Settings.html">Settings</a>
-                </li>
-            </ul>
+                    <li class="nav-item"> 
+                        <a class="nav-link text-light" href="manageviolation.php">Manage Violation</a>
+                    </li>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Violation List
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="Approve.html">Approve List</a>
+                                <a class="dropdown-item" href="#">Reject List</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="Settings.html">Settings</a>
+                        </li>
+                    </ul>
+                </div> 
+
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <button class="btn btn-danger" onclick="logout()">Logout</button>

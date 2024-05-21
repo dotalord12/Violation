@@ -37,21 +37,32 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" href="TITLE UI.html">Report Violation</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="manageviolation.php">Manage Violations</a>
+                    <li class="nav-item"> 
+                        <a class="nav-link text-light" href="manageviolation.php">Manage Violation</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="Settings.html">Settings</a>
-                    </li>
-                </ul>
-                <!-- Move the logout button to the right side -->
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <button class="btn btn-danger" onclick="logout()">Logout</button>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Violation List
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="Approve.html">Approve List</a>
+                                <a class="dropdown-item" href="#">Reject List</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="Settings.html">Settings</a>
+                        </li>
+                    </ul>
+                </div> 
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <button class="btn btn-danger" onclick="logout()">Logout</button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
         <!-- Main Content Area -->
             <div class="container d-flex justify-content-center align-items-center" style="height: 70vh;">
                 <div id="reportViolationForm">
